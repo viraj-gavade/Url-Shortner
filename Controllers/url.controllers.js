@@ -36,7 +36,6 @@ const getUrlAnalytics = (req,res)=>{
 }
 
 
-
 module.exports={
     redirectUrl,
     getShortenedUrl,

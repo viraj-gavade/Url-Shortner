@@ -9,4 +9,14 @@ urlRouter.route('/:Id').get(redirectUrl)
 
 urlRouter.route('/analytics/:Id').get(getUrlAnalytics) 
 
-module.exports = urlRouter
+
+
+const HealthCheckRouter = express.Router()
+
+HealthCheckRouter.route('/').get((req,res)=>{
+    res.status(200).json({msg:'HealthCheck router working Successfully!'})
+}) 
+
+
+
+module.exports = {HealthCheckRouter,urlRouter}

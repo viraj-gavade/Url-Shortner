@@ -1,21 +1,26 @@
+require('dotenv').config()
 const express = require('express')
-const urlRouter = require('./Routes/url.router')
+const {urlRouter,HealthCheckRouter} = require('./Routes/url.router')
 const ConnectDB = require('./DataBase/connect')
 const app = express()
-const port = 3000
+const port = process.env.PORT || 8000
 
 app.use('/api/v1/url',urlRouter)
+app.use('/api/v1/healthcheck',HealthCheckRouter)
 
 app.get('/api/v1',(req,res)=>{
     res.send('hello')
 })
 
 //Connection to the mongoDB DataBase
+app.listen(port,(()=>{
+    console.log('Server is Listening on port:-',port)
 
+}))
 
 const connectdb = async()=>{
     try {
-        await ConnectDB(process.env.MONGO_URI).
+        await ConnectDB().
         then(()=>{
             console.log('Server is Listening on port:-',port)
         })
