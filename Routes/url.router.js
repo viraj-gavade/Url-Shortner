@@ -7,7 +7,7 @@ urlRouter.route('/').post(getShortenedUrl)
 
 // urlRouter.route('/:Id').get(redirectUrl) 
 
-urlRouter.route('/analytics/:Id').get(getUrlAnalytics) 
+urlRouter.route('/analytics/:shortId').get(getUrlAnalytics) 
 
 
 

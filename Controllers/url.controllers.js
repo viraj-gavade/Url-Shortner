@@ -26,8 +26,23 @@ const getShortenedUrl = async (req,res)=>{
     })
 }
 
-const getUrlAnalytics = (req,res)=>{
-    res.send('Get the Url Analytics')
+const getUrlAnalytics = async(req,res)=>{
+    const { shortId } = req.params
+    console.log(shortId)
+    const url = await URL.findOne({shortId})
+    if(!url){
+        return res.status(400).json(
+            {
+                msg:`There is no such Id:-${Id}`
+            }
+        )
+    }
+  return  res.status(200).json(
+        {
+           totalClicks:url.visitHistory.length,
+           analytics:url.visitHistory 
+        }
+    )
 }
 
 

@@ -8,6 +8,7 @@ const port = process.env.PORT || 8000
 app.use(express.json())
 app.use('/api/v1/url',urlRouter)
 
+
 app.get('/:shortId', async (req,res)=>{
     const { shortId } = req.params
     console.log(shortId)
