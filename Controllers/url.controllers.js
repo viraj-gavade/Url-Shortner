@@ -1,6 +1,7 @@
 const URL = require('../Models/models.url')
 const shortid  = require('shortid')
 
+//This is the Controller which takes the original url from the user and coverts in into the short url.
 const getShortenedUrl = async (req,res)=>{
     const { url } = req.body
     if(!url){
@@ -26,6 +27,8 @@ const getShortenedUrl = async (req,res)=>{
     })
 }
 
+
+//This is the Controller which takes the shortned url and returns the analytics of the url like timestamps and nnumber of clicks
 const getUrlAnalytics = async(req,res)=>{
     const { shortId } = req.params
     console.log(shortId)
@@ -46,6 +49,8 @@ const getUrlAnalytics = async(req,res)=>{
 }
 
 
+
+//Exporting the controllers.
 module.exports={
     getShortenedUrl,
     getUrlAnalytics

@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const { type } = require('os')
 
+
+//Creating a url schema 
 const urlSchema = new mongoose.Schema({
     shortId:{
         type:String,
@@ -20,5 +22,5 @@ const urlSchema = new mongoose.Schema({
     ]
 },{timestamps:true})
 
-
+//Exporting the url schema.
 module.exports=mongoose.model('Url',urlSchema)

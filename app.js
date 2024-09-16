@@ -1,13 +1,22 @@
-require('dotenv').config()
-const URL = require('./Models/models.url')
-const express = require('express')
-const {urlRouter,HealthCheckRouter} = require('./Routes/url.router')
-const ConnectDB = require('./DataBase/connect')
-const app = express()
-const port = process.env.PORT || 8000
-app.use(express.json())
-app.use('/api/v1/url',urlRouter)
+require('dotenv').config() //Loading the secrete string
 
+const URL = require('./Models/models.url')//Importing the url model.
+
+const express = require('express')
+const {urlRouter,HealthCheckRouter} = require('./Routes/url.router') //Importing the routers.
+
+const ConnectDB = require('./DataBase/connect')//Importing the connection fucntion.
+
+const app = express()//Creating an express app.
+
+const port = process.env.PORT || 8000 //Defing the system port.
+
+app.use(express.json())
+
+app.use('/api/v1/url',urlRouter) //Setting up the rest api.
+
+
+//Functionality to redirect the user to the orignal url with the help of shortned url and update the analytics of the short url
 
 app.get('/:shortId', async (req,res)=>{
     const { shortId } = req.params
@@ -25,11 +34,7 @@ app.get('/:shortId', async (req,res)=>{
 return res.redirect(entry.redirectURL)
 })
 
-app.use('/api/v1/healthcheck',HealthCheckRouter)
-
-app.get('/api/v1',(req,res)=>{
-    res.send('hello')
-})
+app.use('/api/v1/healthcheck',HealthCheckRouter) //The healthcheck router.
 
 //Connection to the mongoDB DataBase
 app.listen(port,(()=>{
