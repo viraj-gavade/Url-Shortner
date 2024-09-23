@@ -21,9 +21,8 @@ const getShortenedUrl = async (req,res)=>{
             }
         )
     }
-    return res.status(200).json({
-        msg:"Short URL Generated Successfully!",
-        checkURL
+    return res.render('home',{
+        url:checkURL
     })
 }
 

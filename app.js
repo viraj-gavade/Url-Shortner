@@ -6,24 +6,19 @@ const express = require('express')
 const {urlRouter,HealthCheckRouter} = require('./Routes/url.router') //Importing the routers.
 
 const ConnectDB = require('./DataBase/connect')//Importing the connection fucntion.
+const StaticRouter = require('./Routes/StaticRouter')
 
 const app = express()//Creating an express app.
 app.set('view engine','ejs')
 app.set('views',path.resolve('./views'))
 
 const port = process.env.PORT || 8000 //Defing the system port.
-
+app.use(express.urlencoded({extended:false}))
 app.use(express.json())
 app.use('/api/v1/url',urlRouter) //Setting up the rest api.
 
 //Server side rendering
-app.get('/test',async (req,res)=>{
-    const allUrls = await URL.find({})
-    res.render('home',{
-        urls:allUrls
-    })
-    // res.end("<h1>This is response</h1>")
-})
+app.get('/',StaticRouter)
 //Functionality to redirect the user to the orignal url with the help of shortned url and update the analytics of the short url
 
 app.get('/url/:shortId', async (req,res)=>{
