@@ -93,6 +93,10 @@ table td {
     color: #333;
 }
 
+.anchor{
+    color: black;
+}
+
 
     </style>
 </head>
@@ -109,7 +113,7 @@ table td {
     <% if (locals.url) { %>
         <p>
            <h2> Url Generated Successfully</h2>
-           <%= url.shortId %>
+           <a class="anchor" href="<%= url.shortId %>"></a>
         </p>
        <% } %>
 

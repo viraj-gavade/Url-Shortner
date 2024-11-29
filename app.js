@@ -21,7 +21,7 @@ app.use('/api/v1/url',urlRouter) //Setting up the rest api.
 app.get('/',StaticRouter)
 //Functionality to redirect the user to the orignal url with the help of shortned url and update the analytics of the short url
 
-app.get('/url/:shortId', async (req,res)=>{
+app.get('/api/v1/:shortId', async (req,res)=>{
     const { shortId } = req.params
     console.log(shortId)
     const entry  = await URL.findOneAndUpdate({
@@ -34,6 +34,7 @@ app.get('/url/:shortId', async (req,res)=>{
         }
     }
 },{new:true})
+console.log(entry)
 return res.redirect(entry.redirectURL)
 })
 
