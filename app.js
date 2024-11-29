@@ -1,62 +1,84 @@
-require('dotenv').config() //Loading the secrete string
+require('dotenv').config() // Load environment variables
 
-const URL = require('./Models/models.url')//Importing the url model.
+const URL = require('./Models/models.url') // Import URL model
 const path = require('path')
 const express = require('express')
-const {urlRouter,HealthCheckRouter} = require('./Routes/url.router') //Importing the routers.
+const { urlRouter, HealthCheckRouter } = require('./Routes/url.router') // Import routers
 
-const ConnectDB = require('./DataBase/connect')//Importing the connection fucntion.
+const ConnectDB = require('./DataBase/connect') // Import database connection function
 const StaticRouter = require('./Routes/StaticRouter')
 
-const app = express()//Creating an express app.
-app.set('view engine','ejs')
-app.set('views',path.resolve('./views'))
+const app = express() // Create Express application
 
-const port = process.env.PORT || 8000 //Defing the system port.
-app.use(express.urlencoded({extended:false}))
+// Configure view engine and views directory
+app.set('view engine', 'ejs')
+app.set('views', path.resolve('./views'))
+
+// Define server port
+const port = process.env.PORT || 8000
+
+// Middleware for parsing request bodies
+app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
-app.use('/api/v1/url',urlRouter) //Setting up the rest api.
 
-//Server side rendering
-app.get('/',StaticRouter)
-//Functionality to redirect the user to the orignal url with the help of shortned url and update the analytics of the short url
+// API routes
+app.use('/api/v1/url', urlRouter) // URL shortener API endpoints
 
-app.get('/api/v1/:shortId', async (req,res)=>{
+// Server-side rendering route
+app.get('/', StaticRouter)
+
+/**
+ * Redirect route for shortened URLs
+ * Updates visit history and redirects to original URL
+ * 
+ * @route GET /api/v1/:shortId
+ * @param {string} shortId - Unique identifier for the shortened URL
+ */
+app.get('/api/v1/:shortId', async (req, res) => {
     const { shortId } = req.params
-    console.log(shortId)
-    const entry  = await URL.findOneAndUpdate({
-        shortId
-    },
-{
-    $push:{
-        visitHistory:{
-            timestamp:Date.now()
-        }
+    
+    // Find and update the URL entry with visit timestamp
+    const entry = await URL.findOneAndUpdate(
+        { shortId },
+        {
+            $push: {
+                visitHistory: {
+                    timestamp: Date.now()
+                }
+            }
+        },
+        { new: true }
+    )
+
+    // Handle case where no URL is found
+    if (!entry) {
+        return res.status(404).send('URL not found')
     }
-},{new:true})
-console.log(entry)
-return res.redirect(entry.redirectURL)
+
+    // Redirect to the original URL
+    return res.redirect(entry.redirectURL)
 })
 
-app.use('/api/v1/healthcheck',HealthCheckRouter) //The healthcheck router.
+// Health check route
+app.use('/api/v1/healthcheck', HealthCheckRouter)
 
-//Connection to the mongoDB DataBase
-app.listen(port,(()=>{
-    console.log('Server is Listening on port:-',port)
-
-}))
-
-const connectdb = async()=>{
+/**
+ * Establishes database connection and starts the server
+ */
+const connectdb = async () => {
     try {
-        await ConnectDB().
-        then(()=>{
-            console.log('Server is Listening on port:-',port)
+        // Connect to the database
+        await ConnectDB()
+        
+        // Start the server
+        app.listen(port, () => {
+            console.log(`Server is listening on port: ${port}`)
         })
     } catch (error) {
-        console.log('Something Went Wrong!!',error)
+        console.error('Server initialization failed:', error)
         process.exit(1)
     }
 }
 
-
+// Initialize database connection and start server
 connectdb()
