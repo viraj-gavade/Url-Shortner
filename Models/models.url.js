@@ -1,26 +1,33 @@
 const mongoose = require('mongoose')
-const { type } = require('os')
 
-
-//Creating a url schema 
+/**
+ * Mongoose schema for URL shortener 
+ * Defines the structure for storing shortened URLs and their visit history
+ */
 const urlSchema = new mongoose.Schema({
-    shortId:{
-        type:String,
-        required:[true,'Short ID must be provided!'],
-        unique:true
+    // Unique short identifier for the URL
+    shortId: {
+        type: String,
+        required: [true, 'Short ID must be provided!'],
+        unique: true
     },
-    redirectURL:{
-        type:String,
-        required:[true,'Redirect url  must be provided!'],
+    // Original full URL to be redirected
+    redirectURL: {
+        type: String,
+        required: [true, 'Redirect URL must be provided!'],
     },
-    visitHistory:[
+    // Array to track visit history with timestamps
+    visitHistory: [
         {
-            timestamp:{
-                type:Number
+            timestamp: {
+                type: Number
             }
         }
     ]
-},{timestamps:true})
+}, { 
+    // Automatically add createdAt and updatedAt timestamps
+    timestamps: true 
+})
 
-//Exporting the url schema.
-module.exports=mongoose.model('Url',urlSchema)
+// Create and export the Url model based on the schema
+module.exports = mongoose.model('Url', urlSchema)
